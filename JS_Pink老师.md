@@ -149,6 +149,38 @@ map()  join()
 ### join()
 把数组中的字符连接起来为一个字符串
 
+## 创建对象的方法
+1. 利用对象字面量创建对象
+```
+const obj={}
+```
+2. 利用new OObject创建对象
+```
+const obj = new Object({uname:'a'})
+```
+3. 构造函数  **大写字母开头**
+### 构造函数
+创建多个类似的对象
+new关键字调用函数的行为——实例化
+构造函数内部不需要写return，返回自动创建的对象
+```
+function Pig(name,age)
+{
+    this.name=name;
+    this.age=age;
+}
+const Peppa=new Pig('peiqi',6);
+```
+
+#### 过程
+1. 创建新的空对象
+2. 构造函数this指向新对象
+3. 执行构造函数代码，修改this，添加新属性
+4. 返回新对象
+#### 实例成员和静态成员
+实例成员：实例对象的属性和方法;实例对象相互独立
+静态成员：构造函数的属性和方法
+
 ## js高级
 ### 作用域
 1. 局部作用域
@@ -216,4 +248,36 @@ const fn = (参数) => {
 1. 立即执行函数
 2. 数组解构
 
-### 
+#### 对象解构
+解构属性和方法
+```
+    const obj={
+        uname:'pink',
+        age:18
+    }
+    const {uname,age} =obj;  //变量名要和属性名相同
+    console.log(uname,age);
+
+    //改名，旧变量名：新变量名
+    const {uname：username,age} =obj; 
+```
+```
+    //多级对象解构
+    const pig={
+        name:'peiqi',
+        family:{
+            mother:'mama',
+            father:'baba',
+        },
+        age:5
+    }
+    const {name,family:{mother,father},age}=pig
+    console.log(name,age,mother); //peiqi 5 mama
+```
+
+### foreach()遍历数组
+数组.foreach(function(当前数组元素,元素索引号)){
+    //函数体
+}
+类似map，但只遍历，不返回数组
+索引号可不选
