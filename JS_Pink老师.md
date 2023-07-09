@@ -154,7 +154,7 @@ map()  join()
 ```
 const obj={}
 ```
-2. 利用new OObject创建对象
+2. 利用new Object创建对象
 ```
 const obj = new Object({uname:'a'})
 ```
@@ -180,6 +180,44 @@ const Peppa=new Pig('peiqi',6);
 #### 实例成员和静态成员
 实例成员：实例对象的属性和方法;实例对象相互独立
 静态成员：构造函数的属性和方法
+#### 静态方法
+```
+const arr={name:"pink",age:18}
+const obj={}
+1.  arr.keys() //获取属性名  name age
+    arr.values()  //获取属性值  pink 18
+2.  Object.assign(obj,arr) //把arr对象拷贝给obj  {}
+  //Object.assign(arr,{gender："man"}) 还可进行对象属性的添加
+
+```
+## 数组的方法
+**foreach()**:不返回新数组，遍历
+**filter()**:过滤，返回满足条件的数组
+**map()**:返回新数组
+**reduce()**:返回 和
+**join()**:拼接为字符串，返回字符串
+**find()**:查找第一个符合条件的元素值，没有则返回undefined
+**every()**:检测数组中所有元素都符合指定条件，是返回true，不是返回false
+**some()**:数组中是否有满足条件的元素，是返回true
+**sort()**:原数组排序
+**concat()**:返回合并后的新数组
+**splice()**:删除或替换原数组单元
+**reverse()**:反转数组
+**findIndex()**：查找元素的索引值
+
+## 字符串的方法
+**length()**:获取长度
+**substring()**:字符串拆分为数组
+**substring()**:字符串截取
+**startWith()**:检测是否以某字符开头
+**endWith()**:检测是否以某个字符结尾
+**includes()**:判断一个字符串是否包含在另一个字符串中，返回true/false
+**toUpperCase()**:转换为大写
+**toLowerCase()**:转换为小写
+**indexOf()**:检测是否包含某个字符
+**replace()**:替换字符串
+**match()**:查找字符串
+**split(以什么分割)**:将一长串字符串以()中的符号进行分割，返回分割后的数组
 
 ## js高级
 ### 作用域
@@ -281,3 +319,113 @@ const fn = (参数) => {
 }
 类似map，但只遍历，不返回数组
 索引号可不选
+
+### 面向对象编程
+#### 特性：
+封装性：构造函数
+继承性：
+多态性：
+#### 优点
+易维护、易复用、易扩展；更加灵活
+缺点：性能比面向过程低
+
+### 原型
+![Img](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230707141925.png)
+
+#### constructor()
+构造函数的一个属性prototype()指向原型，原型也是一个对象；原型对象中的一个属性constructor()指回构造函数
+eg:star.prototype.constructor === star //true
+
+如果是直接给原型对象的prototype()赋值的话，相当于prototype()里面的值被替换了，constructor()属性没有了，找不到父亲了，所有需要加上constructor的指向
+![Img](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230707154941.png)
+
+![Img](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230707155118.png)
+
+#### 原型对象和对象yuanx
+原型对象：构造函数的prototype属性
+对象原型：实例对象上的__proto__属性，有时候也表示为[[prototype]]
+
+关系图
+![关系图](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230707170040.png)
+
+#### 原型继承
+1. 通过原型链继承
+![原型链继承](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230708094349.png)
+2.只要是对象，就有__proto__
+只要是原型对象，就有constructor
+3. intanceof() :查找是否在原型链上
+
+### 拷贝：只针对引用类型
+#### 深拷贝：
+拷贝的是对象
+eg：通过递归实现、lodash/cloneDeep、通过JSON.stringify()实现
+#### 浅拷贝：
+拷贝对象后，如果里面的属性值是简单数据类型就直接拷贝值
+如果属性值是引用数据类型则拷贝地址
+eg：拷贝对象、数组
+```
+const o ={...obj}
+```
+**直接赋值和浅拷贝的区别**：
+1.直接赋值：只要是对象，就会相互影响，因为是直接拷贝对象栈里面的地址
+2. 浅拷贝如果是一层对象，不相互影响，如果出现多层对象拷贝还会相互影响
+ 
+### 异常处理
+#### throw抛异常
+```
+    throw 'no canshu'
+    throw new Error('no canshu')
+```
+
+#### try/catch捕捉异常
+try:可能发生错误的代码
+catch：拦截写错了的代码。只拦截错误，提示浏览器提供的错误信息，但不会中断程序，加return中断
+finally：不管代码对不对，一定会执行的代码
+```
+function fn()
+    {
+        try{
+            const p=document.querySelector('.p')
+            p.style.color='red'
+        }catch(err){
+            console.log(err.message);
+            return;//中断
+        }
+        finally{
+            // alert('alert')
+            console.log(11);
+        }
+    }
+```
+
+#### debuger
+调试
+
+### this
+#### 普通函数：谁调用指向谁
+箭头函数：函数内不存在this，沿用上一级的；不适用于构造函数、原型函数、dom事件函数
+
+#### 改变this指向
+##### call()
+```
+fun.call(函数运行时指定的this,传递的其他参数)
+fun.call(obj,avg1,avg2)
+```
+返回函数的返回值
+##### apply()
+```
+fun.apply(obj,[avgs])
+```
+传递的值必须包含在数组里面
+使用场景：求数组最大值
+```
+const max = Math.max.apply(Math,[1,2,3]);
+```
+##### bind()
+不会调用函数，但能改变函数内部的this指向
+```
+fun.bind(thisarg,arg1,arg2,……)
+```
+
+### 防抖和节流
+#### 防抖
