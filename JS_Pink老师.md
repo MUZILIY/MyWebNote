@@ -412,6 +412,22 @@ fun.call(函数运行时指定的this,传递的其他参数)
 fun.call(obj,avg1,avg2)
 ```
 返回函数的返回值
+手撕源码
+```
+Function.prototype.myCall()=function(ctx,...args)
+    {
+        ctx=(ctx===null||ctx===undefined)?globalThis:Object(ctx);
+        var key=Symbol('temp');
+        Object.defineProperty(ctx,key,{
+            enumerable:false,
+            value:this,
+        });
+        var result = ctx[key](...args);
+        delete ctx.fn;
+        return result;
+   }
+```
+
 ##### apply()
 ```
 fun.apply(obj,[avgs])
@@ -429,3 +445,63 @@ fun.bind(thisarg,arg1,arg2,……)
 
 ### 防抖和节流
 #### 防抖
+单位时间内，频繁触发事件，只执行**最后一次**
+使用场景：搜索框输入、手机号，邮箱验证输入
+##### 实现方式：
+1. lodash提供的防抖来处理（常用）
+```
+<script src="https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.js"></script>
+
+_.debounce(func,[wait=0],[options=])
+```
+2. 手写一个防抖函数来处理
+核心思路是：利用定时器实现
+```
+const box = document.querySelector('.box');
+let i =1;
+function mouseMove()
+{
+    box.innerHTML=i++;
+    //如果里面存在大量消耗性能的代码，比如dom操作、数据处理，可能造成卡顿
+}
+function mydebounce(fn,t)
+{
+    //1.声明定时器变量
+    let timer;
+    //返回一个匿名函数,因为mydebounce函数带了小括号，相当于调用函数，所以直接写，一打开就会执行完，不会再次使用；而我们需要每次鼠标滑动就执行一次
+    return function(){
+        //2.每次鼠标移动(触发事件)的时候都要先判断是否有定时器，如果有就县清除以前的定时器
+        if(timer) clearTimeout(timer);
+        //3.如果没有定时器，则开启定时器，存入到定时器变量里面
+        timer=setTimeout( function(){
+            //4.定时器里面写函数调用
+            fn()//加小括号调用函数
+        }, t);
+    }
+}
+box.addEventListener('mousemove',_.debounce(mouseMove,500))
+```
+#### 节流
+单位时间内，频繁触发事件，只执行第一次，防止多次提交
+使用场景：高频事件：鼠标移动、页面尺寸缩放、滚动条滚动
+##### 实现方法
+1. lodash提供的节流函数来处理（常用）
+```
+video.ontimeupdate=_.throttle(()=>{},1000)
+```
+
+2. 手写一个节流函数`
+核心思想：定时器setTimeout
+```
+1. 声明一个定时器变量
+2.当鼠标每次滑动都先判断是否有定时器了，如果有定时器则不开启新的
+3. 如果没有则开启定时器，存到变量里
+3.1 定时器里面调用执行的函数
+3.2 定时器里面要把定时器清空
+```
+#### 案例：页面打开，可以记录上一次的视频播放位置
+思路：
+1. 在ontimeupdate事件触发的时候，每隔1s，就记录当前时间到本地存储
+2. 下次打开页面，onloadeddata事件触发，就可以从本地存储取出时间，让视频从取出的时间播放，如果没有就默认为0s
+3. 获得当前时间video.currentTime3
+
