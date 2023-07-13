@@ -1,4 +1,4 @@
-# vue2+3
+
 # day01
 
 ## 一、为什么要学习Vue
@@ -188,13 +188,14 @@ data中的数据, 最终会被添加到实例上
 
 ![68188853934](assets/1681888539340.png)
 
-
-
 ### 3.总结
 
 1.  什么是响应式
-2. 如何访问和修改data中的数据呢
+数据改变，视图自动更新
+使用Vue开发->专注于业务核心逻辑
 
+2. 如何访问和修改data中的数据呢
+data中的数据最终会被添加到实例上
 
 
 ## 六、Vue开发者工具安装
@@ -283,7 +284,7 @@ vue 中的指令按照不同的用途可以分为如下 6 大类：
 
    1. 作用：  控制元素显示隐藏
    2. 语法：  v-show = "表达式"   表达式值为 true 显示， false 隐藏
-   3. 原理：  切换 display:none 控制显示隐藏
+   3. 原理：  切换 display:none 控制显示隐藏，本质上控制css
    4. 场景：频繁切换显示隐藏的场景
 
    ![68189122828](assets/1681891228284.png)
@@ -325,14 +326,14 @@ vue 中的指令按照不同的用途可以分为如下 6 大类：
 示例代码：
 
 ```js
-  <div id="app">
-    <p>性别：♂ 男</p>
-    <p>性别：♀ 女</p>
+   <div id="app">
+    <p v-if="gender === 1">性别：♂ 男</p>
+    <p v-else>性别：♀ 女</p>
     <hr>
-    <p>成绩评定A：奖励电脑一台</p>
-    <p>成绩评定B：奖励周末郊游</p>
-    <p>成绩评定C：奖励零食礼包</p>
-    <p>成绩评定D：惩罚一周不能玩手机</p>
+    <p v-if="score >= 90">成绩评定A：奖励电脑一台</p>
+    <p v-else-if="score >= 70">成绩评定B：奖励周末郊游</p>
+    <p v-else-if="score >= 60">成绩评定C：奖励零食礼包</p>
+    <p v-else>成绩评定D：惩罚一周不能玩手机</p>
   </div>
   
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -346,6 +347,7 @@ vue 中的指令按照不同的用途可以分为如下 6 大类：
       }
     })
   </script>
+
 ```
 
 
@@ -355,7 +357,7 @@ vue 中的指令按照不同的用途可以分为如下 6 大类：
 使用Vue时，如需为DOM注册事件，及其的简单，语法如下：
 
 - <button v-on:事件名="内联语句">按钮</button>
-- <button v-on:事件名="处理函数">按钮</button>
+- <button v-on:事件名="处理函数(methods中的函数名)">按钮</button>
 - <button v-on:事件名="处理函数(实参)">按钮</button>
 - `v-on:` 简写为 **@**
 
@@ -566,10 +568,11 @@ item从1 开始
 <div id="app">
     <h3>小黑的书架</h3>
     <ul>
-      <li>
-        <span>《红楼梦》</span>
-        <span>曹雪芹</span>
-        <button>删除</button>
+      <li v-for="(item, index) in booksList" :key="item.id">
+        <span>{{ item.name }}</span>
+        <span>{{ item.author }}</span>
+        <!-- 注册点击事件 →  通过 id 进行删除数组中的 对应项 -->
+        <button @click="del(item.id)">删除</button>
       </li>
     </ul>
   </div>
@@ -584,6 +587,15 @@ item从1 开始
           { id: 3, name: '《水浒传》', author: '施耐庵' },
           { id: 4, name: '《三国演义》', author: '罗贯中' }
         ]
+      },
+      methods: {
+        del (id) {
+          // console.log('删除', id)
+          // 通过 id 进行删除数组中的 对应项 → filter(不会改变原数组)
+          // filter: 根据条件，保留满足条件的对应项，得到一个新数组。
+          // console.log(this.booksList.filter(item => item.id !== id))
+          this.booksList = this.booksList.filter(item => item.id !== id)
+        }
       }
     })
   </script>
@@ -1706,42 +1718,28 @@ watch: {// watch 完整写法
 6.持久化到本地： 在数据变化时都要更新下本地存储 watch
 
 # day03
-
 ## 一、今日目标
-
 ### 1.生命周期
-
 1. 生命周期介绍
 2. 生命周期的四个阶段
 3. 生命周期钩子
 4. 声明周期案例
 
-
-
 ### 2.综合案例-小黑记账清单
-
 1. 列表渲染
 2. 添加/删除
 3. 饼图渲染
 
-
-
 ### 3.工程化开发入门
-
 1. 工程化开发和脚手架
 2. 项目运行流程
 3. 组件化
 4. 组件注册
 
-
-
 ### 4.综合案例-小兔仙首页
-
 1. 拆分模块-局部注册 
 2. 结构样式完善 
 3. 拆分组件 – 全局注册
-
-
 
 ## 二、Vue生命周期
 
@@ -1760,10 +1758,6 @@ Vue生命周期：就是一个Vue实例从创建 到 销毁 的整个过程。
 4.销毁阶段：销毁Vue实例
 
 ![68206593781](assets/1682065937815.png)
-
-
-
-
 
 ## 三、Vue生命周期钩子
 
