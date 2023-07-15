@@ -631,7 +631,7 @@ item从1 开始
 
 
 
-## 十六、双向绑定指令
+## 十六、双向绑定指令v-model
 
 所谓双向绑定就是：
 
@@ -816,7 +816,7 @@ item从1 开始
 ### 1.语法：
 
 ```html
-<div> :class = "对象/数组">这是一个div</div>
+<div :class = "对象/数组">这是一个div</div>
 ```
 
 
@@ -865,13 +865,12 @@ item从1 开始
     }
   </style>
 
-
 <div id="app">
     <!--绑定对象-->
-    <div class="box">黑马程序员</div>
+    <div class="box" :class="{ pink: true, big: true }">黑马程序员</div>
     <!--绑定数组-->
-    <div class="box">黑马程序员</div>
-  </div>
+    <div class="box" :class="['pink', 'big']">黑马程序员</div>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script>
     const app = new Vue({
@@ -975,7 +974,7 @@ item从1 开始
     }
  </style>
  <div id="app">
-    <div class="box"></div>
+    <div class="box" :style="{ width: '400px', height: '400px', backgroundColor: 'green' }"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script>
@@ -1020,9 +1019,11 @@ item从1 开始
   </style>
 
 <div id="app">
+     <!-- 外层盒子底色 （黑色） -->
     <div class="progress">
-      <div class="inner">
-        <span>50%</span>
+      <!-- 内层盒子 - 进度（蓝色） -->
+      <div class="inner" :style="{ width: percent + '%' }">
+        <span>{{ percent }}%</span>
       </div>
     </div>
     <button>设置25%</button>
@@ -1064,59 +1065,69 @@ item从1 开始
 ### 2.代码准备
 
 ```html
- <style>
+<style>
     textarea {
       display: block;
       width: 240px;
       height: 100px;
       margin: 10px 0;
     }
-  </style>
- <div id="app">
-    <h3>小黑学习网</h3>
-    姓名：
-      <input type="text"> 
-      <br><br>
-    是否单身：
-      <input type="checkbox"> 
-      <br><br>
-    <!-- 
-      前置理解：
-        1. name:  给单选框加上 name 属性 可以分组 → 同一组互相会互斥
-        2. value: 给单选框加上 value 属性，用于提交给后台的数据
-      结合 Vue 使用 → v-model
-    -->
-    性别: 
-      <input type="radio">男
-      <input type="radio">女
-      <br><br>
-    <!-- 
-      前置理解：
-        1. option 需要设置 value 值，提交给后台
-        2. select 的 value 值，关联了选中的 option 的 value 值
-      结合 Vue 使用 → v-model
-    -->
-    所在城市:
-      <select>
-        <option>北京</option>
-        <option>上海</option>
-        <option>成都</option>
-        <option>南京</option>
-      </select>
-      <br><br>
-    自我描述：
-      <textarea></textarea> 
-    <button>立即注册</button>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-  <script>
-    const app = new Vue({
-      el: '#app',
-      data: {
+</style>
+<div id="app">
+<h3>小黑学习网</h3>
 
-      }
-    })
-  </script>
+姓名：
+    <input type="text" v-model="username"> 
+    <br><br>
+
+是否单身：
+    <input type="checkbox" v-model="isSingle"> 
+    <br><br>
+
+<!-- 
+    前置理解：
+    1. name:  给单选框加上 name 属性 可以分组 → 同一组互相会互斥
+    2. value: 给单选框加上 value 属性，用于提交给后台的数据
+    结合 Vue 使用 → v-model
+-->
+性别: 
+    <input v-model="gender" type="radio" name="gender" value="1">男
+    <input v-model="gender" type="radio" name="gender" value="2">女
+    <br><br>
+
+<!-- 
+    前置理解：
+    1. option 需要设置 value 值，提交给后台
+    2. select 的 value 值，关联了选中的 option 的 value 值
+    结合 Vue 使用 → v-model
+-->
+所在城市:
+    <select v-model="cityId">
+    <option value="101">北京</option>
+    <option value="102">上海</option>
+    <option value="103">成都</option>
+    <option value="104">南京</option>
+    </select>
+    <br><br>
+
+自我描述：
+    <textarea v-model="desc"></textarea> 
+
+<button>立即注册</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+const app = new Vue({
+    el: '#app',
+    data: {
+    username: '',
+    isSingle: false,
+    gender: "2",
+    cityId: '102',
+    desc: ""
+    }
+})
+</script>
 ```
 
 
@@ -1177,7 +1188,7 @@ item从1 开始
     </table>
 
     <!-- 目标：统计求和，求得礼物总数 -->
-    <p>礼物总数：? 个</p>
+    <p>礼物总数：{{ totalCount }} 个</p>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <script>
@@ -1775,7 +1786,7 @@ Vue生命周期过程中，会**自动运行一些函数**，被称为【**生�
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-  <script>
+    <script>
     const app = new Vue({
       el: '#app',
       data: {
@@ -1783,16 +1794,40 @@ Vue生命周期过程中，会**自动运行一些函数**，被称为【**生�
         title: '计数器'
       },
       // 1. 创建阶段（准备数据）
-     
+      beforeCreate () {
+        console.log('beforeCreate 响应式数据准备好之前', this.count)
+      },
+      created () {
+        console.log('created 响应式数据准备好之后', this.count)
+        // this.数据名 = 请求回来的数据
+        // 可以开始发送初始化渲染的请求了
+      },
 
       // 2. 挂载阶段（渲染模板）
-      
+      beforeMount () {
+        console.log('beforeMount 模板渲染之前', document.querySelector('h3').innerHTML)
+      },
+      mounted () {
+        console.log('mounted 模板渲染之后', document.querySelector('h3').innerHTML)
+        // 可以开始操作dom了
+      },
 
       // 3. 更新阶段(修改数据 → 更新视图)
-      
+      beforeUpdate () {
+        console.log('beforeUpdate 数据修改了，视图还没更新', document.querySelector('span').innerHTML)
+      },
+      updated () {
+        console.log('updated 数据修改了，视图已经更新', document.querySelector('span').innerHTML)
+      },
 
       // 4. 卸载阶段
-     
+      beforeDestroy () {
+        console.log('beforeDestroy, 卸载前')
+        console.log('清除掉一些Vue以外的资源占用，定时器，延时器...')
+      },
+      destroyed () {
+        console.log('destroyed，卸载后')
+      }
     })
   </script>
 ```
@@ -1896,6 +1931,12 @@ Vue生命周期过程中，会**自动运行一些函数**，被称为【**生�
       el: '#app',
       data: {
         list: []
+      }，
+      async created () {
+        // 1. 发送请求获取数据
+        const res = await axios.get('http://hmajax.itheima.net/api/news')
+        // 2. 更新到 list 中，用于页面渲染 v-for
+        this.list = res.data.data
       }
     })
   </script>
@@ -2217,7 +2258,7 @@ Vue生命周期过程中，会**自动运行一些函数**，被称为【**生�
 
 ![68209214852](assets/1682092148521.png)
 
-虽然脚手架中的文件有很多，目前咱们只需人事三个文件即可
+虽然脚手架中的文件有很多，目前咱们只需认识三个文件即可
 
 1. main.js  入口文件
 2. App.vue  App根组件 
