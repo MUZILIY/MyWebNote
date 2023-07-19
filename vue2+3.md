@@ -2482,7 +2482,7 @@ Vue.component('组件名', 组件对象)
 例：
 
 ```js
-// 导入需要全局注册的组件
+// main.js中导入需要全局注册的组件
 import HmButton from './components/HmButton'
 Vue.component('HmButton', HmButton)
 ```
@@ -2944,7 +2944,7 @@ export default {
 
 <script>
 export default {
-  
+  props:['username','age','isSingle','car','hobby']
 }
 </script>
 
@@ -3023,7 +3023,9 @@ BaseProgress.vue
 
 <script>
 export default {
-  props: ['w'],
+   props: {
+    w: Number,
+  },
 }
 </script>
 
@@ -3344,6 +3346,11 @@ BaseB.vue(发送方)
 <script>
 import Bus from '../utils/EventBus'
 export default {
+    methods: {
+        sendMsgFn() {
+        Bus.$emit('sendMsg', '今天天气不错，适合旅游')
+        },
+  },
 }
 </script>
 
@@ -4008,8 +4015,10 @@ this.$nextTick(() => {
 - 使用指令
 
   注意：在使用指令的时候，一定要**先注册**，**再使用**，否则会报错
-  使用指令语法： v-指令名。如：<input type="text"  v-focus/>  
-
+  使用指令语法： v-指令名。如：
+  ```
+  <input type="text"  v-focus/>  
+  ```
   **注册**指令时**不用**加**v-前缀**，但**使用时**一定要**加v-前缀**
 
 ### 4.指令中的配置项介绍
@@ -4150,7 +4159,7 @@ export default {
 ```html
 <template>
   <div class="main">
-    <div class="box">
+    <div class="box" v-loading="isLoading">
       <ul>
         <li v-for="item in list" :key="item.id" class="news">
           <div class="left">
@@ -4160,17 +4169,21 @@ export default {
               <span>{{ item.time }}</span>
             </div>
           </div>
+
           <div class="right">
             <img :src="item.img" alt="">
           </div>
         </li>
       </ul>
-    </div> 
+    </div>
+    <div class="box2" v-loading="isLoading2"></div>
   </div>
 </template>
 
 <script>
-// 安装axios =>  yarn add axios || npm i axios
+// 接口地址：http://hmajax.itheima.net/api/news
+// 请求方式：get
+// 安装axios =>  yarn add axios
 import axios from 'axios'
 
 // 接口地址：http://hmajax.itheima.net/api/news
@@ -4179,8 +4192,8 @@ export default {
   data () {
     return {
       list: [],
-      isLoading: false,
-      isLoading2: false
+      isLoading: true,
+      isLoading2: true
     }
   },
   async created () {
@@ -4190,7 +4203,18 @@ export default {
     setTimeout(() => {
       // 2. 更新到 list 中，用于页面渲染 v-for
       this.list = res.data.data
+      this.isLoading = false
     }, 2000)
+  },
+  directives: {
+    loading: {
+      inserted (el, binding) {
+        binding.value ? el.classList.add('loading') : el.classList.remove('loading')
+      },
+      update (el, binding) {
+        binding.value ? el.classList.add('loading') : el.classList.remove('loading')
+      }
+    }
   }
 }
 </script>
