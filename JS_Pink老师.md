@@ -5,6 +5,8 @@
 事件冒泡
 阻止事件冒泡 e.stopPropagation()
 链接的跳转，表单域跳转e.preventDefault()
+
+事件委托也叫事件代理，“事件代理”即是把原本需要绑定在子元素的响应事件（click、keydown…）委托给父元素，让父元素担当事件监听的职务。事件代理的原理是DOM元素的事件冒泡
 ### 好处
 1. 很多子盒子要绑定相同的事件，只需要在他们的父盒子上绑定一次就行
 2. 利用事件流的特征解决一些开发需求
@@ -35,7 +37,7 @@ console.log(div.dataset.id)//0
 #### 边界符  
 **^ 
 $**
-如果^和$同时出现，代表精确匹配
+如果^ 和 $ 同时出现，代表精确匹配
 
 #### 量词
 ```
@@ -87,6 +89,272 @@ offsetWidth/offsetHeight：内容+padding+border
 ## 做tab的方法
 1. offset + transform
 2. for 循环 + ${i+1 }
+//for in遍历的是下标，而for of遍历的是属性值
+```
+//方法一
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        ul::after {
+            display: block;
+            content: '';
+            clear: both;
+        }
+        
+        ul li {
+            float: left;
+            margin-right: 5px;
+            background-color: skyblue;
+        }
+        
+        ul li:first-child {
+            background-color: #ccc;
+        }
+        
+        h2 {
+            text-align: center;
+        }
+        
+        ul li a {
+            display: inline-block;
+            font-size: 20px;
+            text-align: center;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            color: #000;
+        }
+        /* 选项区域 */
+        
+        .optionArea {
+            position: relative;
+        }
+        
+        .optionArea div {
+            position: absolute;
+            top: 10px;
+            width: 1220px;
+            height: 500px;
+            background-color: pink;
+            display: none;
+        }
+        
+        .optionArea div:first-child {
+            display: block;
+        }
+    </style>
+</head>
+ 
+<body>
+    <ul>
+        <li><a href="javascript:;">选项一</a></li>
+        <li><a href="javascript:;">选项二</a></li>
+        <li><a href="javascript:;">选项三</a></li>
+        <li><a href="javascript:;">选项四</a></li>
+        <li><a href="javascript:;">选项五</a></li>
+        <li><a href="javascript:;">选项六</a></li>
+    </ul>
+    <section class="optionArea">
+        <div>
+            <h2>标题1</h2>
+        </div>
+        <div>
+            <h2>标题2</h2>
+        </div>
+        <div>
+            <h2>标题3</h2>
+        </div>
+        <div>
+            <h2>标题4</h2>
+        </div>
+        <div>
+            <h2>标题5</h2>
+        </div>
+        <div>
+            <h2>标题6</h2>
+        </div>
+    </section>
+    <script>
+        var lis = document.querySelectorAll('li');
+        var divs = document.querySelectorAll('div');
+        for (let i = 0; i < lis.length; i++) {
+            document.querySelectorAll('li')[i].setAttribute('index', i);
+            lis[i].onclick = function() {
+                for (let i of lis) {
+                    i.style.backgroundColor = 'skyblue';
+                }
+                this.style.backgroundColor = '#ccc';
+                for (let i of divs) {
+                    i.style.display = 'none';
+                }
+                divs[this.getAttribute('index')].style.display = 'block';
+            }
+        }
+    </script>
+</body>
+ 
+</html>
+```
+
+```
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .tab .ul::after {
+            display: block;
+            content: '';
+            clear: both;
+        }
+        
+        .tab .ul a {
+            float: left;
+            margin-right: 5px;
+            background-color: skyblue;
+            font-size: 20px;
+            text-align: center;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            color: #000;
+        }
+        
+        .bc {
+            background-color: #ccc !important;
+        }
+        
+        .tab h2 {
+            text-align: center;
+        }
+        
+        .optionArea div:nth-child(n+2) {
+            display: none;
+        }
+    </style>
+</head>
+ 
+<body>
+    <div class="tab">
+        <div class="ul">
+            <a href="javascript:;" class="bc">选项一</a>
+            <a href="javascript:;">选项二</a>
+            <a href="javascript:;">选项三</a>
+        </div>
+        <section class="optionArea">
+            <div>
+                标题1
+            </div>
+            <div>
+                标题2
+            </div>
+            <div>
+                标题3
+            </div>
+        </section>
+    </div>
+    <div class="tab">
+        <div class="ul">
+            <a href="javascript:;" class="bc">选项一</a>
+            <a href="javascript:;">选项二</a>
+            <a href="javascript:;">选项三</a>
+        </div>
+        <section class="optionArea">
+            <div>
+                标题1
+            </div>
+            <div>
+                标题2
+            </div>
+            <div>
+                标题3
+            </div>
+        </section>
+    </div>
+ 
+    <div class="tab">
+        <div class="ul">
+            <a href="javascript:;" class="bc">选项一</a>
+            <a href="javascript:;">选项二</a>
+            <a href="javascript:;">选项三</a>
+        </div>
+        <section class="optionArea">
+            <div>
+                标题1
+            </div>
+            <div>
+                标题2
+            </div>
+            <div>
+                标题3
+            </div>
+        </section>
+    </div>
+    <script>
+        var tabs = document.querySelectorAll('.tab');
+        for (let i of tabs) {
+            tabChange(i);
+        }
+ 
+        function tabChange(e) {
+            var as = e.querySelectorAll('a');
+            var divs = e.querySelectorAll('section div');
+            for (let i in as) {
+                as[i].onclick = function() {
+                    for (let i of as) {
+                        i.className = '';
+                    }
+                    this.className = 'bc';
+                    for (let i of divs) {
+                        i.style.display = 'none';
+                    }
+                    divs[i].style.display = 'block';
+                }
+            }
+ 
+        }
+    </script>
+</body>
+ 
+</html>
+```
+
 
 ## DOM节点相关操作
 ### 查找DOM节点
@@ -204,6 +472,9 @@ const obj={}
 **splice()**:删除或替换原数组单元
 **reverse()**:反转数组
 **findIndex()**：查找元素的索引值
+
+![Img](https://raw.githubusercontent.com/MUZILIY/blog-imgs/main/imgs/yank-note-picgo-img-20230721204316.png)
+
 
 ## 字符串的方法
 **length()**:获取长度

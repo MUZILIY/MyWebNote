@@ -4184,6 +4184,7 @@ export default {
 // 接口地址：http://hmajax.itheima.net/api/news
 // 请求方式：get
 // 安装axios =>  yarn add axios
+//npm install axios
 import axios from 'axios'
 
 // 接口地址：http://hmajax.itheima.net/api/news
@@ -4302,13 +4303,11 @@ export default {
 
 ### 4.插槽的基本语法
 
-1. 组件内需要定制的结构部分，改用**<slot></slot>**占位
-2. 使用组件时, **<MyDialog></MyDialog>**标签内部, 传入结构替换slot
+1. 组件内需要定制的结构部分，改用```** <slot></slot>**```占位
+1. 使用组件时,  ```**<MyDialog></MyDialog>**```标签内部, 传入结构替换slot
 3. 给插槽传入内容时，可以传入**纯文本、html标签、组件**
 
 ![68241032979](assets/1682410329794.png)
-
-
 
 ### 5.代码示例
 
@@ -4520,7 +4519,7 @@ body {
 
 ### 3.v-slot的简写
 
-v-slot写起来太长，vue给我们提供一个简单写法 **v-slot —> #**
+v-slot写起来太长，vue给我们提供一个简单写法 ```**v-slot —> #**```
 
 ### 4.总结
 
@@ -5379,6 +5378,7 @@ Vue 官方的一个路由插件，是一个第三方包
 
    ```bash
    yarn add vue-router@3.6.5
+   npm install vue-router@3.6.5
    ```
 
 2. main.js中引入VueRouter
@@ -5572,9 +5572,11 @@ vue-router 提供了一个全局组件 router-link (取代 a 标签)
 ### 4.总结
 
 - router-link是什么？
+vue-router提供的全局组件，用于替换a标签
 - router-link怎么用？
+<router-link to="/路径值"><router-link>,必须传入to属性，指定路由路径值
 - router-link的好处是什么？
-
+能跳转，能高亮（自带激活时类名）
 
 
 ## 二、声明式导航-两个类名
